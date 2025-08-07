@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   TextInput,
+  FlatList,
 } from "react-native";
 
 import { db } from "./src/firebaseConnection";
@@ -15,14 +16,19 @@ import {
   collection,
   setDoc,
   addDoc,
+  getDocs,
 } from "firebase/firestore";
+
+import { UsersList } from "./src/users";
 
 export default function App() {
   const [nome, setNome] = useState("");
   const [idade, setIdade] = useState("");
   const [cargo, setCargo] = useState("");
 
-  const[mostrarFormulario, setMostrarFormulario] = useState(false);
+  const [mostrarFormulario, setMostrarFormulario] = useState(false);
+
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     async function getDados() {
@@ -33,14 +39,34 @@ export default function App() {
       //   setNome(snapshot.data()?.Nome)
       // })
 
-      onSnapshot(doc(db, "users", "1"), (doc) => {
+      /*onSnapshot(doc(db, "users", "1"), (doc) => {
         setNome(doc.data()?.Nome);
         setIdade(doc.data()?.Idade);
         setCargo(doc.data()?.Cargo);
+      });*/
+
+      const usersRef = collection(db, "users");
+
+      getDocs(usersRef).then((snapshot) => {
+        let lista = [];
+        snapshot.forEach((doc) => {
+          lista.push({
+            id: doc.id,
+            nome: doc.data().Nome,
+            idade: doc.data().Idade,
+            cargo: doc.data().Cargo,
+          });
+        });
+        //console.log(lista);
+        setUsers(lista);
       });
     }
     getDados();
   }, []);
+
+  function trocarVisibilidade() {
+    setVisiForm(!visiForm);
+  }
 
   async function handlerRegister() {
     // await setDoc(doc(db, 'users', '3'),{
@@ -83,43 +109,62 @@ export default function App() {
     }
   }
 
+  function handleToggle() {
+    setMostrarFormulario(!mostrarFormulario);
+  }
+
   return (
-    
     <View style={styles.container}>
       {/* <Text style={styles.text01}>Nome: {nome}</Text>
       <Text style={styles.text01}>Cargo: {cargo}</Text>
       <Text style={styles.text01}>Idade: {idade}</Text> */}
 
-      
       <Text style={styles.Titulo}>Formulario</Text>
 
-      <Text style={styles.label}>Nome: </Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Digite seu nome..."
-        value={nome}
-        onChangeText={(text) => setNome(text)}
-      />
-
-      <Text style={styles.label}>Idade: </Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Digite sua idade..."
-        value={idade}
-        onChangeText={(text) => setIdade(text)}
-      />
-
-      <Text style={styles.label}>Cargo: </Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Digite seu cargo..."
-        value={cargo}
-        onChangeText={(text) => setCargo(text)}
-      />
-
-      <TouchableOpacity style={styles.button} onPress={handlerRegister}>
-        <Text style={styles.buttonText}>Adicionar</Text>
+      <TouchableOpacity style={styles.button} onPress={handleToggle}>
+        <Text style={{ textAlign: "center", color: "#000" }}>
+          {mostrarFormulario ? "Esconder Formulário" : "Mostrar Formulário"}
+        </Text>
       </TouchableOpacity>
+
+      {mostrarFormulario && (
+        <>
+          <Text style={styles.label}>Nome: </Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Digite seu nome..."
+            value={nome}
+            onChangeText={(text) => setNome(text)}
+          />
+
+          <Text style={styles.label}>Idade: </Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Digite sua idade..."
+            value={idade}
+            onChangeText={(text) => setIdade(text)}
+          />
+
+          <Text style={styles.label}>Cargo: </Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Digite seu cargo..."
+            value={cargo}
+            onChangeText={(text) => setCargo(text)}
+          />
+
+          <TouchableOpacity style={styles.button} onPress={handlerRegister}>
+            <Text style={styles.buttonText}>Adicionar</Text>
+          </TouchableOpacity>
+        </>
+      )}
+
+      <FlatList
+        style={styles.lista}
+        data={users}
+        keyExtractor={(item) => String(item.id)}
+        renderItem={({ item }) => <UsersList data={item}></UsersList>}
+      />
     </View>
   );
 }
