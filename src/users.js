@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 
 export function UsersList({data}){
     return(
@@ -6,14 +6,39 @@ export function UsersList({data}){
             <Text>Nome: {data.nome}</Text>
             <Text>Idade: {data.idade}</Text>
             <Text>Cargo: {data.cargo}</Text>
+
+            <TouchableOpacity style={styles.button}>
+                <Text style={styles.textbtn}>Deletar</Text>
+            </TouchableOpacity>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container:{
-        backgroundColor: "#f0f0f0",
+        backgroundColor: "lightblue",
         padding: 10,
-        borderRadius: 5,
+        borderRadius: 15,
+        marginTop: 10,
+    },
+
+    item:{
+        color: "#333",
+        fontSize: 16,
+    },
+
+    button:{
+        backgroundColor: 'red',
+        marginTop: 10,
+        width: 60,
+        height: 30,
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    textbtn:{
+        color: '#fff',
+        fontWeight: 'bold'
     }
 })
