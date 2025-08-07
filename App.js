@@ -45,7 +45,7 @@ export default function App() {
         setCargo(doc.data()?.Cargo);
       });*/
 
-      const usersRef = collection(db, "users");
+      /*const usersRef = collection(db, "users");
 
       getDocs(usersRef).then((snapshot) => {
         let lista = [];
@@ -56,17 +56,27 @@ export default function App() {
             idade: doc.data().Idade,
             cargo: doc.data().Cargo,
           });
+        });*/
+
+      const usersRef = collection(db, "users");
+
+      onSnapshot(usersRef, (snapshot) => {
+        let lista = [];
+        snapshot.forEach((doc) => {
+          lista.push({
+            id: doc.id,
+            nome: doc.data().Nome,
+            idade: doc.data().Idade,
+            cargo: doc.data().Cargo,
+          });
         });
-        //console.log(lista);
         setUsers(lista);
+        //console.log(lista);
+        // setUsers(lista);
       });
     }
     getDados();
   }, []);
-
-  function trocarVisibilidade() {
-    setVisiForm(!visiForm);
-  }
 
   async function handlerRegister() {
     // await setDoc(doc(db, 'users', '3'),{
@@ -122,7 +132,9 @@ export default function App() {
       <Text style={styles.Titulo}>Formulario</Text>
 
       <TouchableOpacity style={styles.button} onPress={handleToggle}>
-        <Text style={{ textAlign: "center", color: "#000" }}>
+        <Text
+          style={{ textAlign: "center", color: "#fff", fontWeight: "bold" }}
+        >
           {mostrarFormulario ? "Esconder Formulário" : "Mostrar Formulário"}
         </Text>
       </TouchableOpacity>
@@ -230,5 +242,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
+  },
+
+  lista: {
+    width: "100%",
+    marginTop: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    borderRadius: 8,
+    paddingBottom: 20,
   },
 });
