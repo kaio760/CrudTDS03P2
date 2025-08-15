@@ -59,7 +59,6 @@ export default function App() {
         });*/
 
       const usersRef = collection(db, "users");
-
       onSnapshot(usersRef, (snapshot) => {
         let lista = [];
         snapshot.forEach((doc) => {
@@ -123,6 +122,10 @@ export default function App() {
     setMostrarFormulario(!mostrarFormulario);
   }
 
+  function editUser(data) {
+    console.log(data);
+  }
+
   return (
     <View style={styles.container}>
       {/* <Text style={styles.text01}>Nome: {nome}</Text>
@@ -175,7 +178,7 @@ export default function App() {
         style={styles.lista}
         data={users}
         keyExtractor={(item) => String(item.id)}
-        renderItem={({ item }) => <UsersList data={item}></UsersList>}
+        renderItem={({ item }) => <UsersList data={item} handlerEdit={(item) => editUser(item)}></UsersList>}
       />
     </View>
   );
@@ -251,5 +254,11 @@ const styles = StyleSheet.create({
     marginRight: 10,
     borderRadius: 8,
     paddingBottom: 20,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
 });
