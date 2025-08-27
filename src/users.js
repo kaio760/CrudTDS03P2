@@ -2,7 +2,7 @@ import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import {db} from './firebaseConnection';
 import { deleteDoc, doc } from "firebase/firestore";
 
-export function UsersList({data, handlerEdit}){
+export default function UsersList({data, handlerEdit}){
 
     async function handlerDeleteItem(){
         //console.log(data)
