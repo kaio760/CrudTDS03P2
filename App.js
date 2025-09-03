@@ -47,7 +47,7 @@ export default function App() {
     <View style={styles.container}>
       {/* <FromUser /> */}
 
-    <Text>Usuario Logado: {authUser && authUser.email}</Text>
+    {authUser && <Text style={{fontSize: 16, color: 'red'}}>Usuario Logado: {authUser && authUser.email}</Text>}
 
       <Text style={styles.txtInput}>E-mail:</Text>
       <TextInput style={styles.input} placeholder="Digite seu e-mail" value={email} onChangeText={(text)=>setEmail(text)} />
